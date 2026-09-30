@@ -30,10 +30,6 @@ jobs:
 
           git config user.name "NABORAJ SARKAR"
           git config user.email "nishant.ns.business@gmail.com"
-
-          git add log.txt
-
-          # Commit only if changes exist
-          git diff --staged --quiet || git commit -m "chore: daily contribution $(date '+%Y-%m-%d')"
-
-          git push origin HEAD
+git add log.txt
+git commit -m "chore: daily contribution" || echo "Nothing to commit"
+git push
