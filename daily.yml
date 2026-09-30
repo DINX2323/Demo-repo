@@ -1,0 +1,39 @@
+name: Daily Contribution
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # 07:00 UTC ≈ 12:30 PM IST
+  workflow_dispatch:
+
+jobs:
+  auto-contribute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Random delay (0–2 hours, more natural)
+        run: sleep $((RANDOM % 7200 + 300))  # min 5 min delay
+
+      - name: Make daily commit (IST timezone)
+        run: |
+          export TZ=Asia/Kolkata
+
+          # Safety: create file if missing
+          touch log.txt
+
+          # Append fresh line with timestamp
+          echo "Daily auto update: $(date '+%Y-%m-%d %H:%M:%S %Z')" >> log.txt
+
+          git config user.name "NABORAJ SARKAR"
+          git config user.email "nishant.ns.business@gmail.com"
+
+          git add log.txt
+
+          # Commit only if changes exist
+          git diff --staged --quiet || git commit -m "chore: daily contribution $(date '+%Y-%m-%d')"
+
+          git push origin HEAD
