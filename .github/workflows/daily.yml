@@ -1,0 +1,30 @@
+name: Daily Contribution
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  auto-contribute:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make daily update
+        run: |
+          export TZ=Asia/Kolkata
+          echo "Daily update: $(date '+%Y-%m-%d %H:%M:%S %Z')" >> log.txt
+
+          git config user.name "NABORAJ SARKAR"
+          git config user.email "nishant.ns.business@gmail.com"
+
+          git add log.txt
+          git commit -m "chore: daily contribution" || echo "Nothing to commit"
+          git push
